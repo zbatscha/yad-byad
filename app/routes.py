@@ -50,7 +50,6 @@ def revealAnswer():
     answer = answer[0:lastCharId]
     if lastCharId < len(answer):
         answer += '...'
-    answer='Walden, and On The Duty Of Civil Disobedience by Henry David Tho'
     return jsonify({'answer': answer}), 200
 
 
