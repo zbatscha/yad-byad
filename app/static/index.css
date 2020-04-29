@@ -31,7 +31,7 @@
 .answerContainer:hover .overlay {
   width: 100%;
   left: 0;
-  transition-delay:0.7s;
+  transition-delay:0.8s;
 }
 
 .text {
