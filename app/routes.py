@@ -28,8 +28,9 @@ maxAnswerLength = 64
 def index():
 
     fileId, wordId, word, hideLeft, hideRight = _startSearch()
+    availableTitles = [text['title'] for text in availableTexts]
 
-    response =  make_response(render_template('index.html', wordId=wordId, word=word, fileId=fileId, hideLeft=hideLeft, hideRight=hideRight))
+    response =  make_response(render_template('index.html', wordId=wordId, word=word, fileId=fileId, hideLeft=hideLeft, hideRight=hideRight, availableTitles=availableTitles))
     return response
 
 

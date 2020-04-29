@@ -51,7 +51,7 @@
             <hr>
             <div class="row">
                 <div class="col-12">
-                  <button type="button" id="start" name="start" class="btn btn-success" onclick="window.location.reload()">Start New Search</button>
+                  <button type="button" id="start" name="start" class="btn btn-success" onclick="window.location.reload()">Start New Reel</button>
                 </div>
             </div>
             <div class="row ml-1">
@@ -64,6 +64,10 @@
                       <h3 id='wordCount' style="display:inline;">1</h3><h4 style="display:inline; padding-right: 20px;"> words</h4>
                   </div>
             </div>
+            <h3>Available Titles:</h3>
+            {% for title in availableTitles %}
+            <span>{{ title }}</span><br>
+            {% endfor %}
         </div>
       </div>
 
