@@ -45,7 +45,7 @@ def updateWord():
 def revealAnswer():
     file = request.json.get('file')
     fileId = int(file.get('fileId'))
-    answer = availableTexts[fileId]['title'].strip() + '\n' + availableTexts[fileId]['author'].strip()
+    answer = availableTexts[fileId]['title'].strip() + ' by ' + availableTexts[fileId]['author'].strip()
     lastCharId = max(min(maxAnswerLength, len(answer)), 0)
     answer = answer[0:lastCharId]
     if lastCharId < len(answer):
