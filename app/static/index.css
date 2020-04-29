@@ -1,0 +1,81 @@
+.btn.btn-success[disabled] {
+    background-color: #808080;
+    border-color: #808080;
+
+}
+
+.answerContainer {
+  position: relative;
+  width: 80%;
+}
+
+.reveal {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  right: 0;
+  background-color: #008CBA;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 0;
+  height: 100%;
+  transition: .5s ease;
+}
+
+.answerContainer:hover .overlay {
+  width: 100%;
+  left: 0;
+  transition-delay:0.7s;
+}
+
+.text {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {
+  h1 {font-size:3.5rem;
+      overflow-wrap: break-word;
+      word-break: break-word} /*1rem = 16px*/
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+  h1 {font-size:4.5rem;
+      overflow-wrap: break-word;
+      word-break: break-word} /*1rem = 16px*/
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  h1 {font-size:5.5rem;
+      overflow-wrap: break-word;
+      word-break: break-word} /*1rem = 16px*/
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  h1 {font-size:6rem;
+      overflow-wrap: break-word;
+      word-break: break-word} /*1rem = 16px*/
+}
+
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Custom media queries
+*/

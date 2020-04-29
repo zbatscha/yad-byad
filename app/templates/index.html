@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>יד ביד</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Add IntroJs styles -->
+    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+</head>
+
+
+<body>
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+
+        <div class="container-fluid text-center justify-content-center" style="padding-right: 100px;padding-left: 100px">
+            <div class="row">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 d-flex justify-content-end align-items-center">
+                    <button type="button" id="left" name="left" value="{{ wordId-1 }}" class="btn btn-success float-right" onclick="updateWord(this)"><i class="fas fa-chevron-left"></i></button>
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 d-flex justify-content-center align-items-center">
+                    <span><h1 id="currentWord">{{word}}</h1></span>
+                </div>
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 d-flex justify-content-start align-items-center">
+                    <button type="button" id="right" name="right" value="{{ wordId+1 }}" class="btn btn-success float-left" onclick="updateWord(this)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-center align-items-center">
+                    <div class="answerContainer">
+                        <div class="container reveal" id="reveal-answer">
+                            Reveal Answer
+                        </div>
+                        <div class="overlay">
+                            <div class="text" id="answer">hmmmm... Something's not right :(</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                  <button type="button" id="start" name="start" class="btn btn-success" onclick="window.location.reload()">Start New Search</button>
+                </div>
+            </div>
+            <div class="row ml-1">
+                  <div class="ml-auto mr-3">
+                      <h3 id='clickCount' style="display:inline;">0</h3><h4 style="display:inline; padding-right: 20px;"> clicks</h4>
+                  </div>
+            </div>
+            <div class="row ml-1">
+                  <div class="ml-auto mr-3">
+                      <h3 id='wordCount' style="display:inline;">1</h3><h4 style="display:inline; padding-right: 20px;"> words</h4>
+                  </div>
+            </div>
+        </div>
+      </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        let fileId = null
+        let lowerId = null
+        let upperId = null
+        let clicks = 0
+        let totalWords = 0
+        $( document ).ready(function() {
+            fileId = "{{ fileId | tojson }}";
+            lowerId = "{{ wordId | tojson }}"
+            upperId = lowerId
+            let hideLeft = "{{ hideLeft | tojson }}";
+            let hideRight = "{{ hideRight | tojson }}";
+            if (hideLeft == 'true') {
+                document.getElementById("left").disabled = true;
+            }
+            if (hideRight == 'true') {
+                document.getElementById("right").disabled = true;
+            }
+
+            let answer = document.getElementById("reveal-answer");
+
+            // This handler will be executed only once when the cursor
+            // moves over the unordered list
+            answer.addEventListener("mouseenter", function( event ) {
+                // highlight the mouseenter target
+
+                $.ajax({
+                    type : 'POST',
+                    url : "{{url_for('revealAnswer')}}",
+                    data : JSON.stringify({"file": {"fileId": fileId}}),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (response) {
+                        document.getElementById("answer").innerHTML = response.answer
+                    }
+                });
+            });
+        });
+
+
+        function updateWord(direction) {
+            clicks = clicks + 1
+            lowerId = Math.min(direction.value, lowerId);
+            upperId = Math.max(direction.value, upperId);
+            totalWords = upperId - lowerId + 1;
+            document.getElementById("clickCount").innerHTML = clicks
+            document.getElementById("wordCount").innerHTML = totalWords
+            $.ajax({
+                type : 'POST',
+                url : "{{url_for('updateWord')}}",
+                data : JSON.stringify({"word": {"wordId": direction.value, "fileId": fileId}}),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (response) {
+                    let left = document.getElementById("left");
+                    left.value = response.wordId - 1
+                    let right = document.getElementById("right");
+                    right.value = response.wordId + 1
+                    let word = document.getElementById("currentWord");
+                    word.innerHTML = response.word
+                    if (response.hideLeft) {
+                        left.disabled = true;
+                    } else {
+                        left.disabled = false;
+                    }
+
+                    if (response.hideRight) {
+                        right.disabled = true;
+                    } else {
+                        right.disabled = false;
+                    }
+
+                },
+                error: function (response) {
+                    alert('error!')
+                }
+            });
+        }
+
+        document.onkeydown = checkKey;
+
+        function checkKey(e) {
+
+            e = e || window.event;
+
+            if (e.keyCode == '37') {
+               // left arrow
+               document.getElementById("left").click();
+            }
+            else if (e.keyCode == '39') {
+               // right arrow
+               document.getElementById("right").click();
+            }
+            else {
+               return
+            }
+            e.preventDefault();
+
+        }
+
+    </script>
+</body>
+
+</html>
